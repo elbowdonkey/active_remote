@@ -6,6 +6,7 @@ require "active_remote/attributes"
 require "active_remote/config"
 require "active_remote/dirty"
 require "active_remote/dsl"
+require "active_remote/enum"
 require "active_remote/integration"
 require "active_remote/persistence"
 require "active_remote/primary_key"
@@ -19,9 +20,9 @@ require "active_remote/validations"
 module ActiveRemote
   class Base
     extend ::ActiveModel::Callbacks
+    extend ::ActiveRemote::Enum
 
     include ::ActiveModel::Model
-
     include ::ActiveRemote::Association
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::DSL
