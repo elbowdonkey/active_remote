@@ -44,18 +44,14 @@ module ActiveRemote
           #define_method("#{value}!") { update!(attribute_name => value.to_s) }
 
           if enum_scopes != false
-            # klass.send(:detect_negative_condition!, value_method_name)
-            #
-            # klass.send(:detect_enum_conflict!, name, value_method_name, true)
-
-            define_method("#{attribute_name}") do
-              klass.find(attribute_name => value)
+            klass.define_singleton_method(value_method_name) do
+              [klass.find(attribute_name => value)].flatten
             end
 
-            # klass.scope value_method_name, -> { where(attr => value) }
-            #
-            # klass.send(:detect_enum_conflict!, name, "not_#{value_method_name}", true)
-            # klass.scope "not_#{value_method_name}", -> { where.not(attr => value) }
+            # klass.define_singleton_method("not_#{value_method_name}") do
+            # TODO: does find support `not`?
+            #   klass.find(attribute_name => value)
+            # end
           end
         end
       end

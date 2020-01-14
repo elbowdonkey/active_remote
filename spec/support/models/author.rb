@@ -18,5 +18,7 @@ class Author < ::ActiveRemote::Base
   has_many :flagged_posts, :class_name => "::Post"
   has_many :bestseller_posts, :class_name => "::Post", :foreign_key => :bestseller_guid
 
+  has_many :books
+
   belongs_to :category
 end

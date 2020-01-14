@@ -1,5 +1,7 @@
+require "support/protobuf/book.pb"
+
 class Book < ::ActiveRemote::Base
-  #service_class ::Generic::Remote::BookService
+  service_class ::Generic::Remote::BookService
 
   attribute :guid
   attribute :author_guid
@@ -16,4 +18,6 @@ class Book < ::ActiveRemote::Base
   enum difficulty: [:easy, :medium, :hard], _suffix: :to_read
   enum cover: { hard: "hard", soft: "soft" }
   enum boolean_status: { enabled: true, disabled: false }
+
+  belongs_to :author
 end

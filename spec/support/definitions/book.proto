@@ -1,0 +1,51 @@
+package generic.remote;
+
+import "error.proto";
+
+message Book {
+  optional string guid = 1;
+  optional string author_guid = 2;
+  optional string name = 3;
+  optional string kind = 4;
+  optional string status = 5;
+  optional string read_status = 6;
+  optional string nullable_status = 7;
+  optional string language = 8;
+  optional string author_visibility = 9;
+  optional string illustrator_visibility = 10;
+  optional string font_size = 11;
+  optional string difficulty = 12;
+  optional string cover = 13;
+  optional bool boolean_status = 14;
+}
+
+message Books {
+  repeated Book records = 1;
+}
+
+message BookRequest {
+  repeated string guid = 1;
+  repeated string name = 2;
+  repeated string kind = 3;
+  repeated string status = 4;
+  repeated string read_status = 5;
+  repeated string nullable_status = 6;
+  repeated string language = 7;
+  repeated string author_visibility = 8;
+  repeated string illustrator_visibility = 9;
+  repeated string font_size = 10;
+  repeated string difficulty = 11;
+  repeated string cover = 12;
+  repeated bool boolean_status = 13;
+}
+
+service BookService {
+  rpc Search (BookRequest) returns (Books);
+  rpc Create (Book) returns (Book);
+  rpc Update (Book) returns (Book);
+  rpc Delete (Book) returns (Book);
+  rpc CreateAll (Books) returns (Books);
+  rpc UpdateAll (Books) returns (Books);
+  rpc DeleteAll (Books) returns (Books);
+  rpc DestroyAll (Books) returns (Books);
+}

@@ -37,6 +37,12 @@ describe ::ActiveRemote::Enum do
         author_guid: "1",
         guid: "123abc-4",
         name: "Thoughtleadering"
+      },
+      cat: {
+        author_guid: "1",
+        guid: "123abc-4",
+        name: "Complicated Angry Turtles",
+        status: :published
       }
     }
   }
@@ -50,6 +56,15 @@ describe ::ActiveRemote::Enum do
       tlg: Book.new(book_fixtures[:tlg])
     }
   end
+
+  let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => []) }
+  let(:rpc) { double(:rpc) }
+
+  before {
+    allow(rpc).to receive(:execute).and_return(response_without_errors)
+    allow(Book).to receive(:rpc).and_return(rpc)
+  }
+  after { allow(::Book).to receive(:rpc).and_call_original }
 
   describe "query state by predicate" do
     it { expect(book.published?).to eq true }
@@ -73,15 +88,21 @@ describe ::ActiveRemote::Enum do
   end
 
   describe "find via scope" do
-    # TODO: scopes are defined in ActiveRecord - port the minimum to enums
-    # it { expect(book).to eq Book.published.first }
-    # it { expect(book).to eq Book.read.first }
-    # it { expect(book).to eq Book.in_english.first }
-    # it { expect(book).to eq Book.author_visibility_visible.first }
-    # it { expect(book).to eq Book.illustrator_visibility_visible.first }
-    # it { expect(book).to eq Book.medium_to_read.first }
-    # it { expect(books[:ddd]).to eq Book.forgotten.first }
-    # it { expect(books[:rfr]).to eq Book.forgotten.first }
-    # assert_equal books(:rfr), authors(:david).unpublished_books.first
+    let(:records) { [book] }
+    before { allow(Book).to receive(:search).and_return(records) }
+
+    it { expect(book).to eq Book.published.first }
+    it { expect(book).to eq Book.read.first }
+    it { expect(book).to eq Book.in_english.first }
+    it { expect(book).to eq Book.author_visibility_visible.first }
+    it { expect(book).to eq Book.illustrator_visibility_visible.first }
+    # it { expect(book).to eq Book.medium_to_read.first } # TODO: support x_to_y scopes
+    # it { expect(books[:ddd]).to eq Book.forgotten.first } # TODO: consider dropping this - it's the same spec as "Book.read.first"
+    # it { expect(books[:rfr]).to eq authors[:david].unpublished_books.first } # NOTE: scopes as associations not supported
   end
+
+  # TODO: the rest of the test seen at:
+  # https://github.com/rails/rails/blob/master/activerecord/test/cases/enum_test.rb
+
+
 end
